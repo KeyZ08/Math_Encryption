@@ -1,5 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 
+using System.Collections;
+
 namespace Архиваторы;
 
 internal static class Program
@@ -8,6 +10,27 @@ internal static class Program
     private const string targetPathFileLZW = "../../../Files/LZW/"; 
     
     private static async Task Main(string[] args)
+    {
+        // await LZW_Examples();
+        await Haffman_Examples();
+    }
+
+    private static async Task Haffman_Examples()
+    {
+        await using var text = new FileStream(prePathFile + "Original.txt", FileMode.Open, FileAccess.Read);
+        using var reader = new StreamReader(text);
+        
+        var input = await reader.ReadLineAsync(); 
+        
+        var huffmanTree = new Haffman.HuffmanTree();
+        huffmanTree.Build(input);
+        var encoded = huffmanTree.Encode(input);
+        var decoded = huffmanTree.Decode(encoded);
+        
+        Console.WriteLine("Decoded: " + decoded);
+    }
+    
+    private static async Task LZW_Examples()
     {
         Console.WriteLine("Text Example");
         await LZW_Example("Original", "txt");
