@@ -1,0 +1,5 @@
+/Архиваторы/Files/LZW/
+*.idea/
+*.vs/
+*bin/
+*obj/
