@@ -1,4 +1,4 @@
-﻿namespace Кодирование;
+﻿namespace NumericSystemConverter;
 
 partial class ConverterForm
 {

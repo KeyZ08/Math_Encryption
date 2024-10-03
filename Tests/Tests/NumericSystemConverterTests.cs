@@ -1,4 +1,4 @@
-﻿using static Кодирование.NumericSystemConverter;
+﻿using static NumericSystemConverter.NumericSystemConverter;
 
 namespace Tests;
 
@@ -7,47 +7,69 @@ public class NumericSystemConverterTests
 {
     [TestCaseSource(nameof(From10To2Cases))]
     public void From_10_To_2((long num10, long num2) input)
-        => Assert.That(RecalculateFrom10(2, input.num10), Is.EqualTo(input.num2.ToString()));
+    {
+        Assert.That(RecalculateFrom10(2, input.num10), Is.EqualTo(input.num2.ToString()));
+    }
 
     [TestCaseSource(nameof(From10To2Cases))]
     public void From_2_To_10((long num10, long num2) input)
-        => Assert.That(RecalculateTo10(2, input.num2), Is.EqualTo(input.num10));
+    {
+        Assert.That(RecalculateTo10(2, input.num2), Is.EqualTo(input.num10));
+    }
 
     [TestCaseSource(nameof(From10To3Cases))]
     public void From_10_To_3((long num10, long num3) input)
-        => Assert.That(RecalculateFrom10(3, input.num10), Is.EqualTo(input.num3.ToString()));
+    {
+        Assert.That(RecalculateFrom10(3, input.num10), Is.EqualTo(input.num3.ToString()));
+    }
 
     [TestCaseSource(nameof(From10To3Cases))]
     public void From_3_To_10((long num10, long num3) input)
-        => Assert.That(RecalculateTo10(3, input.num3), Is.EqualTo(input.num10));
+    {
+        Assert.That(RecalculateTo10(3, input.num3), Is.EqualTo(input.num10));
+    }
 
     [TestCaseSource(nameof(From10To8Cases))]
     public void From_10_To_8((long num10, long num8) input)
-        => Assert.That(RecalculateFrom10(8, input.num10), Is.EqualTo(input.num8.ToString()));
+    {
+        Assert.That(RecalculateFrom10(8, input.num10), Is.EqualTo(input.num8.ToString()));
+    }
 
     [TestCaseSource(nameof(From10To8Cases))]
     public void From_8_To_10((long num10, long num8) input)
-        => Assert.That(RecalculateTo10(8, input.num8), Is.EqualTo(input.num10));
+    {
+        Assert.That(RecalculateTo10(8, input.num8), Is.EqualTo(input.num10));
+    }
 
     [TestCaseSource(nameof(From3To8Cases))]
     public void From_3_To_8((long num3, long num8) input)
-        => Assert.That(Recalculate(3, 8, input.num3), Is.EqualTo(input.num8.ToString()));
+    {
+        Assert.That(Recalculate(3, 8, input.num3), Is.EqualTo(input.num8.ToString()));
+    }
 
     [TestCaseSource(nameof(From3To8Cases))]
     public void From_8_To_3((long num3, long num8) input)
-        => Assert.That(Recalculate(8, 3, input.num8), Is.EqualTo(input.num3.ToString()));
+    {
+        Assert.That(Recalculate(8, 3, input.num8), Is.EqualTo(input.num3.ToString()));
+    }
 
     [TestCaseSource(nameof(AdditionalCodeCases))]
     public void Additional_Code((int sys, string numIn, string numOut) input)
-        => Assert.That(CalculateAdditionalCode(input.sys, input.numIn), Is.EqualTo(input.numOut));
+    {
+        Assert.That(CalculateAdditionalCode(input.sys, input.numIn), Is.EqualTo(input.numOut));
+    }
 
     [TestCaseSource(nameof(CalculateFloatNumberCases))]
     public void Calculate_Float_Number((decimal num, string expected) input)
-        => Assert.That(CalculateFloatingNumber10To2(input.num, Floating.Float), Is.EqualTo(input.expected));
-    
+    {
+        Assert.That(CalculateFloatingNumber10To2(input.num, Floating.Float), Is.EqualTo(input.expected));
+    }
+
     [TestCaseSource(nameof(CalculateDoubleNumberCases))]
     public void Calculate_Double_Number((decimal num, string expected) input)
-        => Assert.That(CalculateFloatingNumber10To2(input.num, Floating.Double), Is.EqualTo(input.expected));
+    {
+        Assert.That(CalculateFloatingNumber10To2(input.num, Floating.Double), Is.EqualTo(input.expected));
+    }
 
     private static IEnumerable<(long num10, long num2)> From10To2Cases()
     {
@@ -108,7 +130,7 @@ public class NumericSystemConverterTests
         yield return (decimal.Parse("0,0"), "00000000000000000000000000000000");
         yield return (decimal.Parse("-81,123"), "11000010101000100011111011111010");
     }
-    
+
     private static IEnumerable<(decimal num, string expected)> CalculateDoubleNumberCases()
     {
         yield return (decimal.Parse("-4,25"), "1100000000010001000000000000000000000000000000000000000000000000");

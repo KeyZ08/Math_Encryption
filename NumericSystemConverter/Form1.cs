@@ -1,8 +1,8 @@
-using Converter = Кодирование.NumericSystemConverter;
+using Converter = NumericSystemConverter.NumericSystemConverter;
 
 // ReSharper disable SpecifyACultureInStringConversionExplicitly
 
-namespace Кодирование;
+namespace NumericSystemConverter;
 
 public partial class ConverterForm : Form
 {
@@ -63,7 +63,7 @@ public partial class ConverterForm : Form
             textBox3.Text = "-";
             var isNegative = originalNum < 0;
 
-            var resultNum = Converter.Recalculate(fromSystem, toSystem, Math.Abs(originalNum));
+            var resultNum = NumericSystemConverter.Recalculate(fromSystem, toSystem, Math.Abs(originalNum));
             var result = AddBytes(resultNum);
 
             if (result[0] != '0')
@@ -84,9 +84,9 @@ public partial class ConverterForm : Form
             }
 
             if(radioFloat.Checked)
-                textBox3.Text = Converter.CalculateFloatingNumber10To2(num, NumericSystemConverter.Floating.Float);
+                textBox3.Text = NumericSystemConverter.CalculateFloatingNumber10To2(num, NumericSystemConverter.Floating.Float);
             else if(radioDouble.Checked)
-                textBox3.Text = Converter.CalculateFloatingNumber10To2(num, NumericSystemConverter.Floating.Double);
+                textBox3.Text = NumericSystemConverter.CalculateFloatingNumber10To2(num, NumericSystemConverter.Floating.Double);
         }
     }
 
@@ -95,7 +95,7 @@ public partial class ConverterForm : Form
         if (isNegative)
         {
             if (additionalCodeEnabled.Checked)
-                textBox1.Text = Converter.CalculateAdditionalCode(toSystem, result);
+                textBox1.Text = NumericSystemConverter.CalculateAdditionalCode(toSystem, result);
             else
                 textBox1.Text = '-' + result;
         }

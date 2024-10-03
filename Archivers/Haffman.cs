@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Text;
 
-namespace Архиваторы;
+namespace Archivers;
 
 // ReSharper disable once IdentifierTypo
 // ReSharper disable once ClassNeverInstantiated.Global
 public class Haffman
 {
     private static bool IsLeaf(Node node)
-        => node.Left is null && node.Right is null;
+    {
+        return node.Left is null && node.Right is null;
+    }
 
     public class Node
     {
@@ -121,6 +123,7 @@ public class Haffman
                     decoded.Append(current.Symbol);
                     current = Root;
                 }
+
                 current = bit ? current.Right : current.Left;
             }
 

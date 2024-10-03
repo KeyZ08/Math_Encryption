@@ -1,4 +1,4 @@
-namespace Архиваторы;
+namespace Archivers;
 
 // ReSharper disable once InconsistentNaming
 public static class LZW
@@ -7,7 +7,7 @@ public static class LZW
     {
         var dictionary = new Dictionary<List<byte>, int>(new ArrayComparer());
         for (var i = 0; i < 256; i++)
-            dictionary.Add([(byte)i], i);
+            dictionary.Add(new List<byte>(1) { (byte)i }, i);
 
         var writer = new NBitStream(outputStream, 9);
 
@@ -46,10 +46,11 @@ public static class LZW
         var reader = new NBitStream(inputStream, 9);
         var firstByte = reader.Read();
         if (firstByte == -1) throw new Exception($"Пустой {nameof(inputStream)}");
-        
+
         var dictionary = new Dictionary<long, List<byte>>(1024);
         for (var i = 0; i < 256; i++)
-            dictionary.Add(i, [(byte)i]);
+            dictionary.Add(i, new List<byte>(1) { (byte)i })
+                ;
 
         var window = dictionary[firstByte];
         outputStream.Write(window.ToArray());

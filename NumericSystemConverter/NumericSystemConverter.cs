@@ -1,6 +1,6 @@
 ﻿// ReSharper disable SpecifyACultureInStringConversionExplicitly
 
-namespace Кодирование;
+namespace NumericSystemConverter;
 
 public static class NumericSystemConverter
 {

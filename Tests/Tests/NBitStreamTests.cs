@@ -1,4 +1,4 @@
-using Архиваторы;
+using Archivers;
 
 namespace Tests;
 
@@ -10,39 +10,39 @@ public class NBitStreamTests
     {
         var n = input.number;
         var bitesCount = input.bitesCount;
-        
+
         using var stream = new MemoryStream();
         var nWriteStream = new NBitStream(stream, bitesCount);
         nWriteStream.Write(n);
         nWriteStream.EndWrite();
         stream.Position = 0;
-        
+
         var nReadStream = new NBitStream(stream, bitesCount);
         var result = nReadStream.Read();
         Assert.That(result, Is.EqualTo(n));
     }
-    
+
     [TestCaseSource(nameof(NBitStreamCases))]
     public static void NBitStreamMultipleTest((long number, int bitesCount) input)
     {
         var n1 = input.number;
         var n2 = input.number;
         var bitesCount = input.bitesCount;
-        
+
         using var stream = new MemoryStream();
         var nWriteStream = new NBitStream(stream, bitesCount);
         nWriteStream.Write(n1);
         nWriteStream.Write(n2);
         nWriteStream.EndWrite();
         stream.Position = 0;
-        
+
         var nReadStream = new NBitStream(stream, bitesCount);
         var result1 = nReadStream.Read();
         var result2 = nReadStream.Read();
         Assert.That(result1, Is.EqualTo(n1));
         Assert.That(result2, Is.EqualTo(n2));
     }
-    
+
     [Test]
     public static void NBitStreamMyTest()
     {
@@ -52,10 +52,10 @@ public class NBitStreamTests
             var randomNum = Random.Shared.NextInt64();
             var minBitsCount = GetBitsCount(randomNum);
             var randomBitsCount = Random.Shared.Next(minBitsCount, 63);
-            
+
             data.Add((randomNum, randomBitsCount));
         }
-        
+
         using var stream = new MemoryStream();
         var nWriteStream = new NBitStream(stream);
         foreach (var example in data)
@@ -63,10 +63,11 @@ public class NBitStreamTests
             nWriteStream.SetBitsInChunk(example.bitesCount);
             nWriteStream.Write(example.number);
         }
+
         nWriteStream.EndWrite();
         stream.Position = 0;
-        
-        
+
+
         var nReadStream = new NBitStream(stream);
         foreach (var example in data)
         {
@@ -75,7 +76,7 @@ public class NBitStreamTests
             Assert.That(result, Is.EqualTo(example.number));
         }
     }
-    
+
     private static int GetBitsCount(long number)
     {
         var count = 0;

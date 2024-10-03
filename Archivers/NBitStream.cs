@@ -1,18 +1,28 @@
-namespace Архиваторы;
+namespace Archivers;
 
-public class NBitStream(Stream stream, int bitsInChunk = 8)
+public class NBitStream
 {
-    public int BitsInChunk { get; private set; } = bitsInChunk;
+    private readonly Stream stream;
 
     private int bitsInCurrent;
     private int bitsLeftInCurrent;
     private long current;
 
+    public NBitStream(Stream stream, int bitsInChunk = 8)
+    {
+        this.stream = stream;
+        BitsInChunk = bitsInChunk;
+    }
+
+    public int BitsInChunk { get; private set; }
+
     public void SetBitsInChunk(int count)
-        => BitsInChunk = count;
+    {
+        BitsInChunk = count;
+    }
 
     /// <summary>
-    ///     Побитовое чтение
+    /// Побитовое чтение
     /// </summary>
     /// <returns>Число, представляющее собой прочитанные биты</returns>
     public long Read()
@@ -42,7 +52,7 @@ public class NBitStream(Stream stream, int bitsInChunk = 8)
     }
 
     /// <summary>
-    ///     Записывает число (представление битов) побитово.
+    /// Записывает число (представление битов) побитово.
     /// </summary>
     public void Write(long value)
     {
@@ -50,7 +60,7 @@ public class NBitStream(Stream stream, int bitsInChunk = 8)
 
         const int uLongBitsCount = 64;
         var v = (ulong)value;
-        
+
         bitsLeftInCurrent = GetBitsCount(value);
         if (bitsLeftInCurrent < BitsInChunk)
             bitsLeftInCurrent = BitsInChunk;
@@ -75,7 +85,7 @@ public class NBitStream(Stream stream, int bitsInChunk = 8)
             bitsInCurrent += neededBitsCount;
 
             if (bitsInCurrent != 8) continue;
-            
+
             stream.WriteByte((byte)current);
             current = 0;
             bitsInCurrent = 0;
@@ -95,7 +105,7 @@ public class NBitStream(Stream stream, int bitsInChunk = 8)
     }
 
     /// <summary>
-    ///     Обязательно нужно вызвать по окончании записи
+    /// Обязательно нужно вызвать по окончании записи
     /// </summary>
     public void EndWrite()
     {
