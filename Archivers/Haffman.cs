@@ -84,6 +84,8 @@ public class Haffman
             encryptionTable = new Dictionary<byte, List<bool>>(frequencyByChar.Keys.Count);
             foreach (var key in frequencyByChar.Keys)
                 encryptionTable.Add(key, Root.Traverse(key, new List<bool>(0)));
+
+            DumpStatistics(frequencyByChar);
         }
 
         public BitArray Encode(Stream input)
@@ -116,6 +118,30 @@ public class Haffman
             }
 
             output.WriteByte(current.Symbol);
+        }
+
+        private void DumpStatistics(Dictionary<byte, int> frequencyByChar)
+        {
+            var totalCount = frequencyByChar.Values.Sum();
+            var probabilities = frequencyByChar
+                .ToDictionary(
+                    k => k.Key,
+                    v => (double)v.Value / totalCount);
+
+            var H = -probabilities.Values
+                .Where(p => p != 0)
+                .Select(probability => probability * Math.Log2(probability))
+                .Sum();
+
+            var averageLen = probabilities
+                .Select(x => x.Value * encryptionTable[x.Key].Count)
+                .Sum();
+
+            Console.WriteLine(new string('-', 2));
+            Console.WriteLine($"Энтропия = {H} бит/символ");
+            Console.WriteLine($"Коэффициент статистического сжатия: {Math.Log2(encryptionTable.Keys.Count) / averageLen}");
+            Console.WriteLine($"Коэффициент относительной эффективности: {H / averageLen}");
+            Console.WriteLine(new string('-', 2));
         }
     }
 }

@@ -10,31 +10,8 @@ internal static class Program
 
     private static async Task Main(string[] args)
     {
-        // await LZW_Examples();
+        await LZW_Examples();
         await Haffman_Examples();
-    }
-
-    private static async Task Haffman_Examples()
-    {
-        Console.WriteLine("Text Example");
-        
-        await Haffman_Example("Original", "txt");
-        Console.WriteLine();
-        
-        Console.WriteLine("Image Example");
-
-        Console.WriteLine("Solid");
-        await Haffman_Example("Solid", "png");
-        Console.WriteLine("Original");
-        await Haffman_Example("Original", "jpg");
-        Console.WriteLine("Very High");
-        await Haffman_Example("very high", "jpg");
-        Console.WriteLine();
-        
-        Console.WriteLine("Video Example");
-        
-        await Haffman_Example("Original", "mp4");
-        Console.WriteLine();
     }
 
     private static async Task LZW_Examples()
@@ -109,8 +86,32 @@ internal static class Program
         }
     }
 
+    private static async Task Haffman_Examples()
+    {
+        Console.WriteLine("Text Example");
+
+        await Haffman_Example("Original", "txt");
+        Console.WriteLine();
+
+        Console.WriteLine("Image Example");
+
+        Console.WriteLine("Solid");
+        await Haffman_Example("Solid", "png");
+        Console.WriteLine("Original");
+        await Haffman_Example("Original", "jpg");
+        Console.WriteLine("Very High");
+        await Haffman_Example("very high", "jpg");
+        Console.WriteLine();
+
+        Console.WriteLine("Video Example");
+
+        await Haffman_Example("Original", "mp4");
+        Console.WriteLine();
+    }
+
     private static async Task Haffman_Example(string fileName, string fileExtension)
     {
+        Console.WriteLine(new string('-', 10));
         var input = prePathFile + $"{fileName}.{fileExtension}";
         var inputCopy = targetPathFileHaffman + $"{fileName}.{fileExtension}";
         Directory.CreateDirectory(targetPathFileHaffman);
@@ -120,6 +121,7 @@ internal static class Program
         // var compress = targetPathFileHaffman + $"{fileName}_Compress.{fileExtension}";
         var decompress = targetPathFileHaffman + $"{fileName}_Decompress.{fileExtension}";
         await Haffman_Apply(input, decompress);
+        Console.WriteLine(new string('-', 10));
     }
 
     private static async Task Haffman_Apply(string fileInput, string fileOutput)
