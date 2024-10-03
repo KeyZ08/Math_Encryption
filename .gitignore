@@ -1,5 +1,6 @@
-/Archivers/Files/
-*.idea
-*.vs
-*bin
-*obj
+Archivers/Files/LZW/
+Archivers/Files/Haffman/
+.idea/
+.vs/
+bin/
+obj/

@@ -16,6 +16,7 @@ internal static class Program
 
     private static async Task LZW_Examples()
     {
+        Console.WriteLine(new string('#', 10) + " LZW");
         Console.WriteLine("Text Example");
         await LZW_Example("Original", "txt");
         Console.WriteLine();
@@ -32,10 +33,12 @@ internal static class Program
         Console.WriteLine("Video Example");
         await LZW_Example("Original", "mp4");
         Console.WriteLine();
+        Console.WriteLine(new string('#', 10) + " LZW");
     }
 
     private static async Task LZW_Example(string fileName, string fileExtension)
     {
+        Console.WriteLine(new string('-', 10));
         var input = prePathFile + $"{fileName}.{fileExtension}";
         var inputCopy = targetPathFileLZW + $"{fileName}.{fileExtension}";
         Directory.CreateDirectory(targetPathFileLZW);
@@ -54,6 +57,7 @@ internal static class Program
 
         Console.WriteLine($"Коэффициент сжатия = {(float)input1.Length / output1.Length}");
         Console.WriteLine($"Сжатие в процентах = {((float)input1.Length - output1.Length) / input1.Length * 100} %");
+        Console.WriteLine(new string('-', 10));
     }
 
     private static void LZWApply(string fileInput, string fileOutput, LZWOperation operation)
@@ -88,6 +92,7 @@ internal static class Program
 
     private static async Task Haffman_Examples()
     {
+        Console.WriteLine(new string('#', 10) + " Haffman");
         Console.WriteLine("Text Example");
 
         await Haffman_Example("Original", "txt");
@@ -107,6 +112,7 @@ internal static class Program
 
         await Haffman_Example("Original", "mp4");
         Console.WriteLine();
+        Console.WriteLine(new string('#', 10) + " Haffman");
     }
 
     private static async Task Haffman_Example(string fileName, string fileExtension)
