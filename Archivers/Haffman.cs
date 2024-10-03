@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Text;
+﻿using System.Collections;
 
 namespace Archivers;
 
@@ -12,15 +11,15 @@ public class Haffman
         return node.Left is null && node.Right is null;
     }
 
-    public class Node
+    private class Node
     {
-        public char Symbol { get; init; }
+        public byte Symbol { get; init; }
         public long Frequency { get; init; }
         public Node? Right { get; init; }
         public Node? Left { get; init; }
 
         //рекурсивно достаем биты, означающие символ
-        public List<bool>? Traverse(char symbol, List<bool> data)
+        public List<bool>? Traverse(byte symbol, List<bool> data)
         {
             if (IsLeaf(this))
                 return symbol.Equals(Symbol) ? data : null;
@@ -29,21 +28,10 @@ public class Haffman
             List<bool>? right = null;
 
             if (Left is not null)
-            {
-                var leftPath = new List<bool>();
-                leftPath.AddRange(data);
-                leftPath.Add(false);
-
-                left = Left.Traverse(symbol, leftPath);
-            }
+                left = Left.Traverse(symbol, new List<bool>(data) { false });
 
             if (Right is not null)
-            {
-                var rightPath = new List<bool>();
-                rightPath.AddRange(data);
-                rightPath.Add(true);
-                right = Right.Traverse(symbol, rightPath);
-            }
+                right = Right.Traverse(symbol, new List<bool>(data) { true });
 
             return left ?? right;
         }
@@ -51,21 +39,21 @@ public class Haffman
 
     public class HuffmanTree
     {
+        private Dictionary<byte, List<bool>> encryptionTable;
         private Node Root { get; set; } = default!;
 
-        public void Build(string source)
+        public void Build(Stream source)
         {
-            if (string.IsNullOrEmpty(source))
-                throw new ArgumentNullException();
-
-            Dictionary<char, int> frequencyByChar = new();
-
+            var frequencyByChar = new Dictionary<byte, int>();
             //находим частоты
-            for (var i = 0; i < source.Length; i++)
-                if (frequencyByChar.ContainsKey(source[i]))
-                    frequencyByChar[source[i]]++;
+            while (source.ReadByte() is { } @byte && @byte != -1)
+            {
+                var ch = (byte)@byte;
+                if (frequencyByChar.ContainsKey(ch))
+                    frequencyByChar[ch]++;
                 else
-                    frequencyByChar.Add(source[i], 0);
+                    frequencyByChar.Add(ch, 0);
+            }
 
             //создаем листья
             var nodes = frequencyByChar
@@ -75,13 +63,13 @@ public class Haffman
             while (nodes.Count > 1)
             {
                 //сортируем по убыванию частоты
-                nodes.Sort((node1, node2) => (int)(node1.Frequency - node2.Frequency));
+                nodes.Sort((node1, node2) => (int)(node2.Frequency - node1.Frequency));
 
                 //берем 2 самые малые частоты и соединяем их в ноду
                 var taken = nodes.TakeLast(2).ToArray();
                 var parent = new Node
                 {
-                    Symbol = '*',
+                    Symbol = 0,
                     Frequency = taken[0].Frequency + taken[1].Frequency,
                     Left = taken[0],
                     Right = taken[1]
@@ -92,18 +80,19 @@ public class Haffman
             }
 
             Root = nodes.FirstOrDefault(); //корень древа
+
+            encryptionTable = new Dictionary<byte, List<bool>>(frequencyByChar.Keys.Count);
+            foreach (var key in frequencyByChar.Keys)
+                encryptionTable.Add(key, Root.Traverse(key, new List<bool>(0)));
         }
 
-        public BitArray Encode(string source)
+        public BitArray Encode(Stream input)
         {
-            if (string.IsNullOrEmpty(source))
-                throw new ArgumentNullException();
-
             var encodedSource = new List<bool>();
 
-            for (var i = 0; i < source.Length; i++)
+            while (input.ReadByte() is { } @byte && @byte != -1)
             {
-                var encodedSymbol = Root.Traverse(source[i], new List<bool>(0));
+                var encodedSymbol = encryptionTable[(byte)@byte];
                 encodedSource.AddRange(encodedSymbol);
             }
 
@@ -111,23 +100,22 @@ public class Haffman
             return bits;
         }
 
-        public string Decode(BitArray bits)
+        public void Decode(BitArray bits, Stream output)
         {
             var current = Root;
-            var decoded = new StringBuilder();
 
             foreach (bool bit in bits)
             {
                 if (IsLeaf(current ?? throw new InvalidOperationException()))
                 {
-                    decoded.Append(current.Symbol);
+                    output.WriteByte(current.Symbol);
                     current = Root;
                 }
 
                 current = bit ? current.Right : current.Left;
             }
 
-            return decoded.ToString();
+            output.WriteByte(current.Symbol);
         }
     }
 }
