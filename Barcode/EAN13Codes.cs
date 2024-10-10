@@ -24,5 +24,15 @@ public static class EAN13Codes
     public static readonly bool[][] GCodes = RCodes // тот же самый RCode, но перевернут
         .Select(x => x.Reverse().ToArray())
         .ToArray();
-    
+
+    public static int GetCheckSum(int[] num)
+    {
+        if (num.Length != 12 || num.Any(x => x > 9)) 
+            throw new ArgumentException();
+        
+        var digits = num.Select(x => int.Parse(x.ToString())).ToArray();
+        var sum = digits.Select((x, index) => index % 2 == 0 ? x : x * 3 ).Sum();
+        
+        return 10 - sum % 10;
+    }
 }
