@@ -1,50 +1,21 @@
-﻿using System.Collections;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
+using Barcode;
 
-const int numsWeight = 5; //ширина цифр px
-var digits = new[] //цифры попиксельно
-    {
-        "01110100011000110001100011000101110",
-        "00100011000010000100001000010001110",
-        "01110100010000100010001000100011111",
-        "11111000100010000010000011000101110",
-        "00010001100101010010111110001000010",
-        "11111100001111000001000011000101110",
-        "00110010001000011110100011000101110",
-        "11111000010001000100010000100001000",
-        "01110100011000101110100011000101110",
-        "01110100011000101111000010001001100"
-    }
-    .Select(x => new BitArray(x.Select(c => c != '0').ToArray())).ToArray();
+const int barcodeHeight = DigitBlocks.DigitHeight * 10;
+const int barcodeWidth = DigitBlocks.DigitWidth + 1 + 3 + EAN13Codes.BitsCountPerDigit * 12 + 5 + 3;
+const int boundsWidth = 10;
 
-var bitmap = new Bitmap(200, 100);
+var bitmap = new Bitmap(barcodeWidth + boundsWidth * 2, barcodeHeight + boundsWidth * 2);
 for (var h = 0; h < bitmap.Height; h++)
 for (var w = 0; w < bitmap.Width; w++)
     bitmap.SetPixel(w, h, Color.White);
 
 var offsetX = 0;
-foreach (var digit in digits)
+for (var i = 0; i < 10; i++)
 {
-    PrintDigit(digit, new Point(offsetX, 0));
-    offsetX += numsWeight + 1;
+    Printer.PrintBlock(DigitBlocks.Digits[i], new Point(boundsWidth + offsetX, boundsWidth), bitmap);
+    offsetX += DigitBlocks.DigitWidth + 1;
 }
 
 bitmap.Save("../../../Barcodes/test.png", ImageFormat.Png);
-
-void PrintDigit(BitArray digit, Point position)
-{
-    var printedBitsCount = 0;
-    var offsetY = 0;
-    while (printedBitsCount < digit.Count)
-    {
-        for (var i = 0; i < numsWeight; i++)
-        {
-            if (digit[printedBitsCount])
-                bitmap.SetPixel(i + position.X, position.Y + offsetY, Color.Black);
-
-            printedBitsCount++;
-        }
-        offsetY++;
-    }
-}
