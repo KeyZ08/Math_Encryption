@@ -25,9 +25,9 @@ public static class EAN13Codes
         .Select(x => x.Reverse().ToArray())
         .ToArray();
 
-    public static int GetCheckSum(int[] num)
+    public static int GetCheckSum(ICollection<int> num)
     {
-        if (num.Length != 12 || num.Any(x => x > 9)) 
+        if (num.Count != 12 || num.Any(x => x > 9)) 
             throw new ArgumentException();
         
         var digits = num.Select(x => int.Parse(x.ToString())).ToArray();
