@@ -1,4 +1,3 @@
-using System.Buffers;
 using System.Collections;
 using System.Drawing;
 using System.Text;
@@ -14,9 +13,9 @@ namespace QRCode.QR;
 
 public class QRCodeGenerator
 {
-    private const int modeIndicatorLength = 16;
+    private const int modeIndicatorLength = 4; //занимает инфрормация о типе кодирования
     private const int version = 10;
-    private const int countIndicatorLength = 16;
+    private const int countIndicatorLength = 16; //занимает число сколько у нас данных
     private const int capacity = 119;
 
     private static readonly ECCInfo EccInfo = new()
@@ -53,7 +52,8 @@ public class QRCodeGenerator
         var completeBitArray = new BitArray(completeBitArrayLength);
 
         //записываем вид кодирования
-        var bitArrayOffset = IntToBin(4, 4, completeBitArray, 0); //num = 4 = 0100 = байтовый вид кодирования
+        var bitArrayOffset =
+            IntToBin(4, modeIndicatorLength, completeBitArray, 0); //num = 4 = 0100 = байтовый вид кодирования
         //записываем длину данных
         bitArrayOffset = IntToBin(dataInputLength, countIndicatorLength, completeBitArray, bitArrayOffset);
         // записываем данные
@@ -179,7 +179,7 @@ public class QRCodeGenerator
         }
     }
 
-    /// Вычисляет кодовые слова для исправления ошибок (ECC) для сегмента данных, используя предоставленную информацию ECC.
+    /// Вычисляет кодовые слова для исправления ошибок (ECC) для сегмента данных
     private static byte[] CalculateECCWords(BitArray bitArray, int offset, int count, Polynom generatorPolynomBase)
     {
         var messagePolynom = CalculateMessagePolynom(bitArray, offset, count);
@@ -249,7 +249,7 @@ public class QRCodeGenerator
         return messagePol;
     }
 
-    private static Polynom CalculateGeneratorPolynom(int numEccWords) // numEccWords = количество избыточных символов
+    private static Polynom CalculateGeneratorPolynom(int numEccWords)
     {
         var generatorPolynom = new Polynom(2);
         generatorPolynom.Add(new PolynomItem(0, 1));
