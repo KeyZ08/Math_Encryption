@@ -9,11 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="9.0.0-rc.2.24474.1" />
+        <Folder Include="Barcodes\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Barcodes\" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
     </ItemGroup>
 
 </Project>
