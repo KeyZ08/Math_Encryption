@@ -15,11 +15,13 @@ internal static class Program
         var size = data.ModuleMatrix.Count;
 
         var bitmap = new Bitmap(size, size);
+
         Fill(bitmap, Color.White);
         for (var y = 0; y < size; y++)
         for (var x = 0; x < size; x++)
             if (matrix[x][y])
                 bitmap.SetPixel(x, y, Color.Black);
+
         bitmap.Save("../../../test4.png", ImageFormat.Png);
     }
 
